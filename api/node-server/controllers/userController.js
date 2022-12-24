@@ -9,8 +9,7 @@ const getUsers = asyncHandler(async (req, res) => {
 })
 
 const getMe = asyncHandler(async (req, res) => {
-  const user = await UserModel.findById(req.user.id)
-  res.status(200).json(user)
+  res.status(200).json(req.user)
 })
 
 const generateToken = (id) => {

@@ -15,6 +15,14 @@ const taskSchema = mongoose.Schema(
       type: Boolean,
       required: false,
     },
+    time_taken: {
+      type: Number,
+      required: false,
+    },
+    tag: {
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true

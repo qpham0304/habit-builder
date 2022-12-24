@@ -4,14 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "server": "nodemon node-server/server.js"
+    "start": "nodemon api/node-server/server.js",
+    "server": "nodemon api/node-server/server.js",
+    "web-client": "npm start --prefix web-client"
   },
   "author": "Quan Pham",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
