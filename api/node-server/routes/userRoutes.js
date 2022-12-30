@@ -8,6 +8,6 @@ router.post('/login', loginUser)
 router.post('/register', registerUser)
 router.get('/me', protect, getMe)
 router.put('/update', protect, updateUser)
-router.delete('/:id', deleteUser)
+router.delete('/:id', protect, deleteUser)
 
 module.exports = router

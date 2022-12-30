@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { register, reset } from '../features/auth/authSlice'
 import LoadingSpinner from '../components/LoadingSpinner'
+import { Button, FormGroup, TextField } from '@mui/material'
 
 function Register() {
   const [formInfo, setFormInfo] = useState({
@@ -57,74 +58,76 @@ function Register() {
 
   return (
     <>
-      <section className='heading'>
+      <section>
         <h1>
           Register
         </h1>
         <p>Please create an account</p>
       </section>
 
-      <section className='form'>
+      <section >
         <form onSubmit={onSubmit}>
-          <div className='form-group'>
-            <input
+          <div>
+            <TextField
+              variant='outlined'
               type='text'
-              className='form-control'
               id='username'
               name='username'
               value={username}
-              placeholder='Enter your username'
+              label='Username'
               onChange={onChange}
             />
           </div>
-          <div className='form-group'>
-            <input
+          <div>
+            <TextField
+              variant='outlined'
               type='text'
-              className='form-control'
               id='name'
               name='name'
               value={name}
-              placeholder='Enter your name'
+              label='Name'
               onChange={onChange}
             />
           </div>
-          <div className='form-group'>
-            <input
+          <div>
+            <TextField
+              variant='outlined'
               type='email'
-              className='form-control'
               id='email'
               name='email'
               value={email}
-              placeholder='Enter your email'
+              label='Email'
               onChange={onChange}
             />
           </div>
-          <div className='form-group'>
-            <input
+          <div>
+            <TextField
+              variant='outlined'
               type='password'
               className='form-control'
               id='password'
               name='password'
               value={password}
-              placeholder='Enter password'
+              label='name'
               onChange={onChange}
             />
           </div>
-          <div className='form-group'>
-            <input
+          <div>
+            <TextField
+              variant='outlined'
               type='password'
               className='form-control'
               id='passwordConfirm'
               name='passwordConfirm'
               value={passwordConfirm}
-              placeholder='Confirm password'
+              label='Confirm Password'
               onChange={onChange}
             />
           </div>
-          <div className='form-group'>
-            <button type='submit' className='btn btn-block'>
+          <div>
+            <Button variant='contained' type='submit'>
               Submit
-            </button>
+            </Button>
           </div>
         </form>
       </section>

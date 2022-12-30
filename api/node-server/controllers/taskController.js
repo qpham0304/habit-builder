@@ -8,15 +8,24 @@ const getTasks = asyncHandler(async (req, res) => {
 })
 
 const postTask = asyncHandler(async (req, res) => {
-  // if(!req.body.task) {
-  //   res.status(400)
-  //   throw new Error('object missing required field')
-  // }
-  // const task = await TaskModel.create({
-  //   task: req.body.task,
-  //   completed: req.body.completed,
-  //   user: req.user.id,  // user id from logedin user
-  // })
+  if(!req.body.task) {
+    res.status(400)
+    throw new Error('object missing required field')
+  }
+  const task = await TaskModel.create({
+    task: req.body.task,
+    completed: req.body.completed,
+    user: req.user.id,  // user id from logedin user
+  })
+
+  res.status(200).json(task)
+})
+
+const postManyTasks = asyncHandler(async (req, res) => {
+  if(!req.body) {
+    res.status(400)
+    throw new Error('object missing body')
+  }
   const tasks = req.body
   await tasks.map((task, i) => {
     if (!task.task) {
@@ -31,7 +40,8 @@ const postTask = asyncHandler(async (req, res) => {
       user: req.user.id,
     })
   })
-  res.status(200).json("tasks added successfully")
+  const result = await TaskModel.find({user: req.user.id})
+  res.status(200).json(result)
 })
 
 const updateTask = asyncHandler(async (req, res) => {
@@ -58,12 +68,13 @@ const deleteTask = asyncHandler(async (req, res) => {
   }
 
   await task.remove()
-  res.status(200).send(`task ${req.params.id} removed`)
+  res.status(200).json({_id: req.params.id})
 })
 
 module.exports = {
   getTasks,
   postTask,
+  postManyTasks,
   updateTask,
   deleteTask
 }
