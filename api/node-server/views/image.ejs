@@ -7,7 +7,9 @@
     <title>Document</title>
 </head>
 <body >
-    <img src="/1672376187017.jpg">
-    <!-- <div>image should be here</div> -->
+    <!-- <img src="data:image/jpeg;base64, <%= images %>"> -->
+    <%for (let a = 0; a < images.length; a++) { %>
+        <img src="data:image/jpeg;base64, <%= images[a] %>" style="width: 100%;" />
+    <% } %>
 </body>
 </html>

@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { register, reset } from '../features/auth/authSlice'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { Button, FormGroup, TextField } from '@mui/material'
+import { Button, Checkbox, FormControlLabel, Grid, styled, TextField, Typography } from '@mui/material'
+import { Box, Stack } from '@mui/system'
+import img from '../assets/images/103207318_p0.png'
 
 function Register() {
   const [formInfo, setFormInfo] = useState({
@@ -37,10 +39,7 @@ function Register() {
     if(password !== passwordConfirm) {
       toast.error('Passwords do not match')
     } else {
-      const userData = {
-        username, name, email, password,
-      }
-      console.log(userData)
+      const userData = { username, name, email, password }
       dispatch(register(userData))
     }
   }
@@ -52,22 +51,41 @@ function Register() {
     }))
   }
 
-  if(isLoading) {
+  const FormButton = styled(Button)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: '#fff',
+  }))
+
+  if(isLoading)
     return <LoadingSpinner />
-  }
 
   return (
-    <>
-      <section>
-        <h1>
-          Register
-        </h1>
-        <p>Please create an account</p>
-      </section>
-
-      <section >
-        <form onSubmit={onSubmit}>
-          <div>
+    <Stack
+      display={'flex'}
+      flexGrow={1}
+      justifyContent={'flex-start'}
+      alignItems={'center'}
+      p={2}
+      sx={{
+        backgroundImage: `url(${img})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <Box
+        sx={{ minWidth: '350px', width: { xs: '80%', sm: '60%', md: '30%' } }}
+        className='glass-container'
+        display={'flex'}
+        flexDirection={'column'}
+        gap='1rem'
+        p={2}
+      >
+        <Typography  textAlign={'center'} variant='h5'>Register</Typography>
+        <Typography textAlign={'center'}>Please create an account</Typography>
+        <form style={{ display: 'flex', gap: '1rem', flexDirection: 'column' }} onSubmit={onSubmit}>
+          <Box sx={{display: 'flex', gap: '1rem'}}>
             <TextField
               variant='outlined'
               type='text'
@@ -76,9 +94,8 @@ function Register() {
               value={username}
               label='Username'
               onChange={onChange}
+              fullWidth
             />
-          </div>
-          <div>
             <TextField
               variant='outlined'
               type='text'
@@ -87,9 +104,10 @@ function Register() {
               value={name}
               label='Name'
               onChange={onChange}
+              fullWidth
             />
-          </div>
-          <div>
+          </Box>
+          <Box>
             <TextField
               variant='outlined'
               type='email'
@@ -98,9 +116,10 @@ function Register() {
               value={email}
               label='Email'
               onChange={onChange}
+              fullWidth
             />
-          </div>
-          <div>
+          </Box>
+          <Box>
             <TextField
               variant='outlined'
               type='password'
@@ -108,11 +127,12 @@ function Register() {
               id='password'
               name='password'
               value={password}
-              label='name'
+              label='Password'
               onChange={onChange}
+              fullWidth
             />
-          </div>
-          <div>
+          </Box>
+          <Box>
             <TextField
               variant='outlined'
               type='password'
@@ -122,16 +142,18 @@ function Register() {
               value={passwordConfirm}
               label='Confirm Password'
               onChange={onChange}
+              fullWidth
             />
-          </div>
-          <div>
-            <Button variant='contained' type='submit'>
-              Submit
-            </Button>
-          </div>
+          </Box>
+          <Box sx={{display : 'flex', justifyContent: 'flex-end', margin: '0 5px'}}>
+            <Link style={{textDecoration: 'underline'}} to='/login'>Already have an account? Sign in</Link>
+          </Box>
+          <FormButton variant='contained' type='submit'>
+            Submit
+          </FormButton>
         </form>
-      </section>
-    </>
+      </Box>
+    </Stack>
   )
 }
 

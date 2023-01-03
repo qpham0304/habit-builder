@@ -31,10 +31,6 @@ app.use('/users', require('./routes/userRoutes'))
 app.use('/tasks', require('./routes/taskRoutes'))
 app.use('/images', require('./routes/imageRoutes'))
 
-//-----
-
-//-----
-
 app.get('/', (req, res) => {
   res.render('index')
 })

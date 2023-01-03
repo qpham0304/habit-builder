@@ -1,12 +1,14 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
 import LoadingSpinner from '../components/LoadingSpinner'
-import { Button, styled, TextField } from '@mui/material'
+import { Button, Grid, styled, TextField, Typography } from '@mui/material'
 import { theme } from '../theme'
+import { Box, Stack } from '@mui/system'
+import img from '../assets/images/103207318_p0.png'
 
 function Login() {
   const [formInfo, setFormInfo] = useState({
@@ -36,8 +38,7 @@ function Login() {
       alert('missing required field')
     else {
       const userData = { email, password }
-      //TODO: resolve incorrect username or password request
-      dispatch(login(userData))
+      dispatch(login(userData)) //TODO: resolve incorrect username or password request
     }
   }
   
@@ -49,7 +50,7 @@ function Login() {
   }
 
   const FormButton = styled(Button)(({ theme }) => ({
-    backgroundColor: theme.palette.black.main,
+    backgroundColor: theme.palette.primary.main,
     color: '#fff',
   }))
 
@@ -57,43 +58,64 @@ function Login() {
     return <LoadingSpinner />
 
   return (
-    <>
-      <section className='heading'>
-        <h1>
+    <Stack
+      display={'flex'}
+      flexGrow={1}
+      justifyContent={'flex-start'}
+      alignItems={'center'}
+      p={2}
+      sx={{
+        backgroundImage: `url(${img})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <Box
+        sx={{ minWidth: '350px', width: { xs: '80%', sm: '60%', md: '30%' } }}
+        className='glass-container'
+        display={'flex'}
+        flexDirection={'column'}
+        gap='1rem'
+        p={2}
+      >
+        <Typography sx={{ margin: '1rem' }} textAlign={'center'} variant='h5' mt={5}>
           Login
-        </h1>
-      </section>
-
-      <section className='form'>
-        <form onSubmit={onSubmit}>
-          <div className='form-group'>
+        </Typography>
+        <form style={{ display: 'flex', gap: '1rem', flexDirection: 'column' }} onSubmit={onSubmit}>
+          <Box>
             <TextField
               type='email'
-              className='form-control'
               id='email'
               name='email'
               value={email}
               label='Enter your email'
               onChange={onChange}
+              fullWidth
             />
-          </div>
-          <div className='form-group'>
+          </Box>
+          <Box>
             <TextField
               type='password'
-              className='form-control'
               id='password'
               name='password'
               value={password}
               label='Enter password'
               onChange={onChange}
+              fullWidth
             />
-          </div>
-          <div className='form-group'>
-            <FormButton variant='contained' color='primary' type='submit'> submit </FormButton>
-          </div>
+          </Box>
+          <Box sx={{display : 'flex', justifyContent: 'space-between', margin: '0 5px'}}>
+            <Link style={{textDecoration: 'underline'}} to='/register'>Register</Link>
+            <Link style={{textDecoration: 'underline'}} to='/register'>Forgot Password</Link>
+          </Box>
+          <FormButton variant='contained' color='primary' type='submit'>
+            Sign In
+          </FormButton>
         </form>
-      </section>
-    </>
+      </Box>
+    </Stack>
   )
 }
 
