@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
+import Focus from './pages/Focus'
+import Note from './pages/Note'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Header from './components/Header'
@@ -56,6 +58,8 @@ function App() {
           <Routes>
             <Route path='/' element={<Welcome />} />
             <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/focus' element={<Focus />} />
+            <Route path='/note' element={<Note />} />
             <Route path='/signin' element={<SignIn />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />

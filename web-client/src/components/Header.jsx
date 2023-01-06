@@ -41,7 +41,7 @@ function Header(props) {
   }
 
   return (
-    <AppBar sx={{ bgcolor: 'seagreen' }} position='sticky'>
+    <AppBar position='sticky'>
       <StyledToolbar variant='dense'>
         <Box display={'flex'} alignItems={'center'} gap={1}>
           <SideBarDrawer />

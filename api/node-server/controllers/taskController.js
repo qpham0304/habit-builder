@@ -13,9 +13,12 @@ const postTask = asyncHandler(async (req, res) => {
     throw new Error('object missing required field')
   }
   const task = await TaskModel.create({
-    task: req.body.task,
-    completed: req.body.completed,
     user: req.user.id,  // user id from logedin user
+    task: req.body.task,
+    description: req.body.description,
+    completed: req.body.completed,
+    time_taken: req.body.time_taken,
+    tag: req.body.tag,
   })
 
   res.status(200).json(task)
