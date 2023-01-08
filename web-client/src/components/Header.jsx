@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../features/auth/authSlice'
@@ -7,6 +7,7 @@ import { useState } from 'react'
 import ProfileMenu from './ProfileMenu'
 import SideBarDrawer from './SideBarDrawer'
 import MenuIcon from '@mui/icons-material/Menu';
+import { getImages } from '../features/images/imageSlice'
 
 const StyledLink = styled(Link)({
   color: '#fff',
@@ -32,7 +33,15 @@ function Header(props) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
-  const [open, setOpen] = useState(false)
+  const imgState = useSelector((state) => state.image)
+  useEffect(() => {
+    if(imgState.isError)
+      console.log(imgState.message)
+    dispatch(getImages())
+    return () => {
+      dispatch(reset())
+    }
+  }, [])
 
   const onLogout = () => {
     dispatch(logout())
@@ -40,6 +49,7 @@ function Header(props) {
     navigate('/')
   }
 
+  const source = imgState.images && imgState.images.images.length > 0 ? `data:image/jpeg;base64, ${imgState.images.images[0].b64}` : null
   return (
     <AppBar position='sticky'>
       <StyledToolbar variant='dense'>
@@ -51,7 +61,7 @@ function Header(props) {
           {user ? (
             <>
               <UserBox>
-                <ProfileMenu mode={mode} setMode={setMode} onLogout={onLogout} />
+                <ProfileMenu mode={mode} setMode={setMode} onLogout={onLogout} imageSource={source}/>
               </UserBox>
             </>
           ) : (

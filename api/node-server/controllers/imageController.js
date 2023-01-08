@@ -57,12 +57,20 @@ const getImages2 = asyncHandler(async (req, res) => {
   // const b64 = Buffer.from(image.image.data).toString('base64')
   // res.render('image', { images: b64 })
   const images = await ImageModel.find({user: req.user.id})
-  const b64 = images.map(image => Buffer.from(image.image.data).toString('base64'))
-  const img_id = images.map(image => image._id)
-  console.log(images[0]._id)
-  // res.render('image', { images: b64 }) // response with a page that contain the list of images
-  // res.status(200).json({_id: img_id}) // resonse with an entire list of image objects with meta data 
-  res.status(200).json({_id: img_id})
+  let b64 = []
+  let img_id = []
+  if(images.length === 0){
+    res.status(200).json({images: {_id: img_id, b64: b64}}) // resonse with an entire list of image objects with meta data 
+  }
+  else{
+    const processedImages = []
+    b64 = images.map(image => Buffer.from(image.image.data).toString('base64'))
+    img_id = images.map(image => image._id)
+    for(var i = 0; i < img_id.length; i++){
+      processedImages.push({_id: img_id[i], b64: b64[i]})
+    }
+    res.status(200).json({images: processedImages}) 
+  }
 })
 
 const uploadForm = asyncHandler(async (req, res) => {
@@ -121,7 +129,7 @@ const deleteImage = asyncHandler(async (req, res) => {
     throw new Error('Image not found')
   }
   await image.remove()
-  res.status(200).json({id: req.params.id})
+  res.status(200).json({_id: req.params.id})
 })
 
 module.exports = {

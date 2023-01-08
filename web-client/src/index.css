@@ -56,11 +56,11 @@ a {
 }
 
 .task-item:hover {
-  background: #cecece;
+  background: #cecece22;
 }
 
 .task-item.active {
-  background: #bfbfbf;
+  background: #bfbfbf33;
 }
 
 .glass-container {

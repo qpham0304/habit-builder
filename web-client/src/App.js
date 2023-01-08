@@ -8,12 +8,14 @@ import Header from './components/Header'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { createTheme, ThemeProvider } from '@mui/material'
-// import { theme } from './theme'
 import { useEffect, useState } from 'react'
-import { Container, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import Welcome from './pages/Welcome'
 import SignIn from './pages/SignIn'
 import { useSelector } from 'react-redux'
+import Progress from './pages/Progress'
+import Reports from './pages/Reports'
+import Profile from './pages/Profile'
 
 function App() {
   const user = useSelector((state) => state.auth.user)
@@ -63,6 +65,9 @@ function App() {
             <Route path='/signin' element={<SignIn />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
+            <Route path='/progress' element={<Progress />} />
+            <Route path='/reports' element={<Reports />} />
+            <Route path='/profile' element={<Profile />} />
             <Route path='*' element={<Navigate to='/register' />} />
           </Routes>
         </Stack>

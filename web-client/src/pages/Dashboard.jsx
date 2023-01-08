@@ -1,25 +1,21 @@
 import React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import LoadingSpinner from '../components/LoadingSpinner'
-import { getTasks, createTask, setTask, deleteTask, reset } from '../features/tasks/taskSlice'
+import { getTasks, createTask, deleteTask, reset } from '../features/tasks/taskSlice'
 import { toast } from 'react-toastify'
-import { Button, Skeleton, styled, Typography, Box, ListItem, List, IconButton, TextField, InputAdornment, Toolbar, Checkbox } from '@mui/material'
-import Fade from '@mui/material/Fade';
-import Backdrop from '@mui/material/Backdrop';
+import { Button, Skeleton, Typography, Box, IconButton, TextField, InputAdornment, Toolbar } from '@mui/material'
 import { Stack } from '@mui/system'
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddTaskButton from '../components/AddTaskButton'
 import TaskFormModal from '../components/TaskFormModal'
 import { SearchOutlined } from '@mui/icons-material'
+import WindowIcon from '@mui/icons-material/Window'
+import GridOnIcon from '@mui/icons-material/GridOn'
+import TasksListing from '../components/TasksListing'
+import FilterMenu from '../components/FilterMenu'
 import { DataGrid } from '@mui/x-data-grid';
-import WindowIcon from '@mui/icons-material/Window';
-import GridOnIcon from '@mui/icons-material/GridOn';
 
 function LoadingSkeleton() {
-  <Stack spacing={1}>
+  ;<Stack spacing={1}>
     <Skeleton variant='text' height={20} />
     <Skeleton variant='text' height={20} />
     <Skeleton variant='text' height={20} />
@@ -27,7 +23,7 @@ function LoadingSkeleton() {
   </Stack>
 }
 
-function TaskReport({completedTasks, incompletedTasks}) {
+function TaskReport({ completedTasks, incompletedTasks }) {
   const { tasks, isLoading, isError, message } = useSelector((state) => state.task)
   return (
     <Stack>
@@ -49,55 +45,30 @@ function Dashboard() {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
   const { tasks, isLoading, isError, message } = useSelector((state) => state.task)
-  const completedTasks = tasks.tasks ? (tasks.tasks.filter((task) => task.completed)) : null
-  const incompletedTasks = tasks.tasks ? (tasks.tasks.filter((task) => !task.completed)) : null
+  const completedTasks = tasks.tasks ? tasks.tasks.filter((task) => task.completed) : null
+  const incompletedTasks = tasks.tasks ? tasks.tasks.filter((task) => !task.completed) : null
   const [selectedTask, setSelectedTask] = useState(null)
   const [action, setAction] = useState('action')
+  const [viewMode, setViewMode] = useState('list')
 
   const defaultState = {
-    task: 'N/A',
-    description: 'N/A',
+    task: '',
+    description: '-',
     completed: false,
     time_taken: Number,
     tag: '-',
   }
+
   const [formInfo, setFormInfo] = useState(defaultState)
 
   const [open, setOpen] = React.useState(false)
-  
+
   const handleOpen = () => {
     setOpen(true)
   }
 
   const handleClose = () => {
     setOpen(false)
-  }
-
-  const StyledListItem = styled(Box)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    padding: '0 1rem',
-    '& > div': {display: 'flex', alignItems: 'center'},
-    '& > p': {display: 'flex', flexGrow: '1', flexBasis:'100%'},
-  })
-
-  const TaskItem = (props) => {
-    const { task } = props
-    return (
-      <StyledListItem>
-        <Typography sx={{textDecoration: task.completed ? 'line-through' : 'none'}}>{task.task}</Typography>
-        <Typography>{task.description}</Typography>
-        <Typography>{task.time_taken}</Typography>
-        <Typography>{task.tag}</Typography>
-        <Typography>{task.updatedAt}</Typography>
-        <Box>
-          <IconButton onClick={() => {setFormInfo(task); handleOpen(); setAction('update')}} disableTouchRipple><EditIcon/></IconButton>
-          <IconButton onClick={() => removeTask(task)} disableTouchRipple><DeleteIcon/></IconButton>
-        </Box>
-      </StyledListItem>
-    )
   }
 
   useEffect(() => {
@@ -123,17 +94,6 @@ function Dashboard() {
     }
   }
 
-  const updateTask = () => {
-    if (selectedTask === null) toast.error('No task was chosen')
-    if (formInfo.task === '') toast.error('Please give a name to task before update')
-    else {
-      dispatch(setTask({ id: selectedTask._id, tasks: formInfo }))
-      setFormInfo((prevState) => defaultState)
-      toast.success('Task updated')
-      handleClose()
-    }
-  }
-
   const removeTask = (task) => {
     if (task === null) toast.error('no task was chosen')
     else {
@@ -143,39 +103,18 @@ function Dashboard() {
     }
   }
 
-  const onChange = (e) => {
-    setFormInfo((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }))
-  }
-
-  const onChecked = (e) => {
-    setFormInfo((prevState) => ({
-      ...prevState,
-      completed: e.target.checked
-    }))
-  }
-
-  const updateTag = (e, newTag) => {
-    setFormInfo((prevState) => ({
-      ...prevState,
-      tag: newTag
-    }))
-  }
-
   const rows = tasks.tasks
   const columns = [
-    { field: 'task', width: '200', },
-    { field: 'description', width: '200', },
-    { field: 'completed', width: '200', },
-    { field: 'time_taken', type: 'number', width: '200', },
-    { field: 'tag', width: '200', },
-    { field: 'createdAt', width: '200', },
-  ];
+    { field: 'task', width: '200' },
+    { field: 'description', width: '200' },
+    { field: 'completed', width: '200' },
+    { field: 'time_taken', type: 'number', width: '200' },
+    { field: 'tag', width: '200' },
+    { field: 'createdAt', width: '200' },
+  ]
 
   return (
-    <Stack m={1}>
+    <Stack>
       <h2>Dashboard</h2>
       <h3>Hello {user ? user.name : null}!</h3>
       <Box sx={{ display: 'flex', gap: '2rem', '& > div:last-of-type': { marginLeft: 'auto', marginRight: '2rem' } }}>
@@ -225,107 +164,75 @@ function Dashboard() {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <Typography>View mode</Typography>
           <Box>
-            <IconButton disableTouchRipple>
+            <FilterMenu />
+            <IconButton onClick={() => setViewMode('list')} disableTouchRipple>
               <GridOnIcon />
             </IconButton>
-            <IconButton disableTouchRipple>
+            <IconButton onClick={() => setViewMode('table')} disableTouchRipple>
               <WindowIcon />
             </IconButton>
           </Box>
         </Box>
       </Toolbar>
-      <Box>
-        <Typography variant='h5'>Complete</Typography>
-        {tasks.tasks ? (
-          <List>
-            {completedTasks.map((task) => {
-              return (
-                <ListItem
-                  onClick={() => {
-                    setSelectedTask(task)
-                  }}
-                  key={task._id}
-                  disableGutters
-                  className={selectedTask === task ? 'task-item active' : 'task-item'}
-                >
-                  {/* <Checkbox checked={task.completed} /> */}
-                  <TaskItem task={task} />
-                </ListItem>
-              )
-            })}
-          </List>
-        ) : (
-          <LoadingSkeleton />
-        )}
-      </Box>
-      <Box>
-        <Typography variant='h5'>Incomplete</Typography>
-        {tasks.tasks ? (
-          <List>
-            {incompletedTasks.map((task) => {
-              return (
-                <ListItem
-                  onClick={() => {
-                    setSelectedTask(task)
-                  }}
-                  key={task._id}
-                  disableGutters
-                  className={selectedTask === task ? 'task-item active' : 'task-item'}
-                >
-                  {/* <Checkbox checked={task.completed} /> */}
-                  <TaskItem task={task} />
-                </ListItem>
-              )
-            })}
-          </List>
-        ) : (
-          <LoadingSkeleton />
-        )}
-      </Box>
-      {/* <Box>
-        {tasks.tasks ? (
-          <List>
-            {tasks.tasks.map((task) => {
-              return (
-                <ListItem
-                  onClick={() => {
-                    setSelectedTask(task)
-                  }}
-                  key={task._id}
-                  disableGutters
-                  className={selectedTask === task ? 'task-item active' : 'task-item'}
-                >
-                  <Checkbox checked={task.completed} />
-                  <TaskItem task={task} />
-                </ListItem>
-              )
-            })}
-          </List>
-        ) : (
-          // <DataGrid
-          //   rows={rows}
-          //   columns={columns}
-          //   pageSize={5}
-          //   rowsPerPageOptions={[5]}
-          //   checkboxSelection
-          //   getRowId={row => row._id}
-          // />
-          <LoadingSkeleton />
-        )}
-      </Box> */}
+      {viewMode === 'list' ? (
+        <Stack p={1}>
+          <Box>
+            <Typography variant='h5'>Complete ({completedTasks ? completedTasks.length : 0})</Typography>
+            {tasks.tasks ? (
+              <TasksListing
+                tasks={completedTasks}
+                selectedTask={selectedTask}
+                setSelectedTask={setSelectedTask}
+                setFormInfo={setFormInfo}
+                handleOpen={handleOpen}
+                setAction={setAction}
+              />
+            ) : (
+              <LoadingSkeleton />
+            )}
+          </Box>
+          <Box>
+            <Typography variant='h5'>Incomplete ({completedTasks ? incompletedTasks.length : 0})</Typography>
+            {tasks.tasks ? (
+              <TasksListing
+                tasks={incompletedTasks}
+                selectedTask={selectedTask}
+                setSelectedTask={setSelectedTask}
+                setFormInfo={setFormInfo}
+                handleOpen={handleOpen}
+                setAction={setAction}
+              />
+            ) : (
+              <LoadingSkeleton />
+            )}
+          </Box>
+        </Stack>
+      ) : null}
+      {viewMode === 'table' ? (
+        <Box height={600}>
+          {tasks.tasks ? (
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+              checkboxSelection
+              getRowId={(row) => row._id}
+              onSelectionModelChange={()=>(console.log('grid changes'))}
+            />
+          ) : (
+            <LoadingSkeleton />
+          )}
+        </Box>
+      ) : null}
       <TaskFormModal
         formInfo={formInfo}
         setFormInfo={setFormInfo}
         selectedTask={selectedTask}
-        onChange={onChange}
-        updateTag={updateTag}
         handleClose={handleClose}
         addTask={addTask}
-        updateTask={updateTask}
-        removeTask={removeTask}
         open={open}
         action={action}
-        onChecked={onChecked}
       />
     </Stack>
   )

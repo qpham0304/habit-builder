@@ -1,3 +1,5 @@
 node_modules
 .env
-images
+api/node-server/images
+web-client/src/assets/images
+# images

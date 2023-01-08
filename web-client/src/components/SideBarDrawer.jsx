@@ -26,13 +26,11 @@ export default function SideBarDrawer() {
   const navigate = useNavigate()
   const actionList_1 = ['Dashboard', 'Focus', 'Note', 'Todo']
   const IconList_1 = [<DashboardCustomizeIcon/>, <HourglassBottomRoundedIcon/>, <StickyNote2Icon/>, <FactCheckRoundedIcon/>]
-  const actionList_2 = ['Progress', 'Weekly Report']
+  const actionList_2 = ['Progress', 'Reports']
   const IconList_2 = [<PieChartRoundedIcon/>, <InsertChartRoundedIcon/>]
   const toggleDrawer = (open) => (event) => {
     setDrawerOpen(open)
   }
-
-  
 
   const DrawerItem = () => {
     return (

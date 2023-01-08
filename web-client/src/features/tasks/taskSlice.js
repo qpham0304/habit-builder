@@ -54,69 +54,67 @@ export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id, thunkA
 export const taskSlice = createSlice({
   name: 'task',
   initialState,
- reducers: {
-    reset: (state) => initialState,
+  reducers: {
+    reset: (state) => initialState
   },
   extraReducers: (builder) => {
     builder
-    .addCase(getTasks.pending, (state) => {
-      state.isLoading = true
-    })
-    .addCase(getTasks.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = true
-      state.tasks = action.payload
-    })
-    .addCase(getTasks.rejected, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = false
-      state.message = action.payload
-    })
-    .addCase(createTask.pending, (state) => {
-      state.isLoading = true
-    })
-    .addCase(createTask.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = true
-      state.tasks.tasks.push(action.payload)
-    })
-    .addCase(createTask.rejected, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = false
-      state.message = action.payload
-    })
-    .addCase(setTask.pending, (state) => {
-      state.isLoading = true
-    })
-    .addCase(setTask.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = true
-      state.tasks.tasks = state.tasks.tasks.map(task => {
-        if(task._id !== action.payload._id)
-          return task
-        else 
-          return action.payload
+      .addCase(getTasks.pending, (state) => {
+        state.isLoading = true
       })
-    })
-    .addCase(setTask.rejected, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = false
-      state.message = action.payload
-    })
-    .addCase(deleteTask.pending, (state) => {
-      state.isLoading = true
-    })
-    .addCase(deleteTask.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = true
-      state.tasks.tasks = state.tasks.tasks.filter(task => task._id !== action.payload._id) 
-    })
-    .addCase(deleteTask.rejected, (state, action) => {
-      state.isLoading = false
-      state.isSuccess = false
-      state.message = action.payload
-    })
-  }
+      .addCase(getTasks.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.tasks = action.payload
+      })
+      .addCase(getTasks.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.message = action.payload
+      })
+      .addCase(createTask.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(createTask.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.tasks.tasks.push(action.payload)
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.message = action.payload
+      })
+      .addCase(setTask.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(setTask.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.tasks.tasks = state.tasks.tasks.map((task) => {
+          if (task._id !== action.payload._id) return task
+          else return action.payload
+        })
+      })
+      .addCase(setTask.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.message = action.payload
+      })
+      .addCase(deleteTask.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.tasks.tasks = state.tasks.tasks.filter((task) => task._id !== action.payload._id)
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.message = action.payload
+      })
+  },
 })
 
 export const { reset } = taskSlice.actions

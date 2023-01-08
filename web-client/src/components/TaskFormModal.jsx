@@ -1,22 +1,14 @@
 import React from 'react'
-import {
-  Button,
-  Modal,
-  TextField,
-  styled,
-  Typography,
-  Box,
-  Stack,
-  Checkbox,
-  Autocomplete,
-  useTheme,
-} from '@mui/material'
+import { Button, Modal, TextField, Typography, Box, Stack, Checkbox, Autocomplete, useTheme } from '@mui/material'
 import Fade from '@mui/material/Fade';
 import Backdrop from '@mui/material/Backdrop';
-
+import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux';
+import { setTask } from '../features/tasks/taskSlice'
 
 function TaskFormModal(props) {
-  const { formInfo, setFormInfo, selectedTask, onChange, updateTag, handleClose, addTask, updateTask, removeTask, open, action, onChecked } = props
+  const { formInfo, setFormInfo, selectedTask, handleClose, addTask, open, action } = props
+  const dispatch = useDispatch()
   const theme = useTheme()
   const modalStyle = {
     position: 'absolute',
@@ -36,6 +28,46 @@ function TaskFormModal(props) {
       display: 'flex',
       alignItems: 'center'
     }
+  }
+
+  const defaultState = {
+    task: '',
+    description: '-',
+    completed: false,
+    time_taken: Number,
+    tag: '-',
+  }
+
+  const onChange = (e) => {
+    setFormInfo((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
+  const updateTask = () => {
+    if (selectedTask === null) toast.error('No task was chosen')
+    if (formInfo.task === '') toast.error('Please give a name to task before update')
+    else {
+      dispatch(setTask({ id: selectedTask._id, tasks: formInfo }))
+      setFormInfo((prevState) => defaultState)
+      toast.success('Task updated')
+      handleClose()
+    }
+  }
+
+  const onChecked = (e) => {
+    setFormInfo((prevState) => ({
+      ...prevState,
+      completed: e.target.checked
+    }))
+  }
+
+  const updateTag = (e, newTag) => {
+    setFormInfo((prevState) => ({
+      ...prevState,
+      tag: newTag
+    }))
   }
 
   return (
@@ -87,7 +119,7 @@ function TaskFormModal(props) {
             >
               Complete:
             </Typography>
-            <Checkbox color={'success'} onChange={onChecked}/>
+            <Checkbox color={'success'} defaultChecked={(selectedTask ? selectedTask.completed : false)} onChange={onChecked}/>
             <TextField
               sx={{ marginLeft: '1rem' }}
               name='time_taken'
