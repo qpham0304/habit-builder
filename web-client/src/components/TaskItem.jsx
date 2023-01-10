@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, styled, Box, IconButton, useTheme } from '@mui/material'
+import { Typography, styled, Box, IconButton, useTheme, Accordion, AccordionSummary, AccordionDetails, Paper } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { deleteTask } from '../features/tasks/taskSlice'
 import EditIcon from '@mui/icons-material/Edit';
@@ -24,40 +24,83 @@ const TaskItem = (props) => {
     }
   })
 
+  const StyledListCard = styled(Paper)({
+    padding: '1rem',
+    // display: 'flex',
+    // justifyContent: 'column',
+    background: 'transparent',
+    width: '100%',
+  })
+
   return (
-    <StyledListItem>
-      <Typography sx={{ textDecoration: task.completed ? 'line-through' : 'none' }}>{task.task}</Typography>
-      <Typography overflow={'ellipsis'}>{task.description}</Typography>
-      <Typography>{task.time_taken}</Typography>
-      <Typography>{task.tag}</Typography>
-      <Typography>
-        {date[0]} at {time}
-      </Typography>
-      <Box>
-        <IconButton
-          color='info'
-          sx={{ padding: 0 }}
-          size='medium'
-          onClick={() => {
-            setFormInfo(task)
-            handleOpen()
-            setAction('update')
-          }}
-          disableTouchRipple
-        >
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          color='error'
-          sx={{ padding: 0 }}
-          size='medium'
-          onClick={() => dispatch(deleteTask(task._id))}
-          disableTouchRipple
-        >
-          <DeleteIcon />
-        </IconButton>
+    // <StyledListItem>
+    //   <Typography sx={{ textDecoration: task.completed ? 'line-through' : 'none' }}>{task.task}</Typography>
+    //   <Typography overflow={'ellipsis'}>{task.description}</Typography>
+    //   <Typography>{task.time_taken}</Typography>
+    //   <Typography>{task.tag}</Typography>
+    //   <Typography>
+    //     {date[0]} at {time}
+    //   </Typography>
+    //   <Box>
+    //     <IconButton
+    //       color='info'
+    //       sx={{ padding: 0 }}
+    //       size='medium'
+    //       onClick={() => {
+    //         setFormInfo(task)
+    //         handleOpen()
+    //         setAction('update')
+    //       }}
+    //       disableTouchRipple
+    //     >
+    //       <EditIcon />
+    //     </IconButton>
+    //     <IconButton
+    //       color='error'
+    //       sx={{ padding: 0 }}
+    //       size='medium'
+    //       onClick={() => dispatch(deleteTask(task._id))}
+    //       disableTouchRipple
+    //     >
+    //       <DeleteIcon />
+    //     </IconButton>
+    //   </Box>
+    // </StyledListItem>
+    <StyledListCard elevation={9}>
+      <Box display={'flex'} justifyContent='space-between'>
+        <Typography sx={{ textDecoration: task.completed ? 'line-through' : 'none' }} variant='h6'>name: {task.task}</Typography>
+        <Box display={'flex'} gap={'0.5rem'}>
+          <IconButton
+            color='info'
+            sx={{ padding: 0 }}
+            size='medium'
+            onClick={() => {
+              setFormInfo(task)
+              handleOpen()
+              setAction('update')
+            }}
+            disableTouchRipple
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            color='error'
+            sx={{ padding: 0 }}
+            size='medium'
+            onClick={() => dispatch(deleteTask(task._id))}
+            disableTouchRipple
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
       </Box>
-    </StyledListItem>
+      <Typography overflow={'ellipsis'}>description: {task.description}</Typography>
+      <Typography>time_taken: {task.time_taken}</Typography>
+      <Typography>tag:  {task.tag}</Typography>
+      <Typography mt={2} textAlign={'end'} variant='subtitle1' color={theme.palette.text.secondary}>
+        Last Updated: {date[0]} at {time}
+      </Typography>
+    </StyledListCard>
   )
 }
 

@@ -31,7 +31,8 @@ export default function ProfileMenu(props) {
   const StyledListItemButton = styled(ListItemButton)({
     // background: '#112233',
     padding: '1rem',
-    width: '300px',
+    width: '200px',
+    [theme.breakpoints.up('sm')]: { width: '300px',},
   })
 
   return (

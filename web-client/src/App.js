@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux'
 import Progress from './pages/Progress'
 import Reports from './pages/Reports'
 import Profile from './pages/Profile'
+import theme from './theme'
 
 function App() {
   const user = useSelector((state) => state.auth.user)
@@ -37,23 +38,9 @@ function App() {
 
   const isDarkTheme = useThemeDetector
   const [mode, setMode] = useState(!isDarkTheme ? 'dark' : 'light') // remember fo reverse logic for easier read
-  const darkTheme = createTheme({
-    palette: {
-      mode: mode,
-      primary: {
-        main: '#1760a5',
-      },
-      secondary: {
-        main: '#15c630',
-      },
-      black: {
-        main: '#000',
-      },
-    },
-  })
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={mode === 'dark' ? createTheme(theme.darkTheme) : createTheme(theme.lightTheme)}>
       <BrowserRouter>
         <Stack bgcolor={'background.default'} color={'text.primary'} minHeight={'100vh'}>
           {user ? <Header mode={mode} setMode={setMode} /> : null}

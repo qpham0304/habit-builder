@@ -4,23 +4,39 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getTasks, createTask, deleteTask, reset } from '../features/tasks/taskSlice'
 import { toast } from 'react-toastify'
-import { Button, Skeleton, Typography, Box, IconButton, TextField, InputAdornment, Toolbar } from '@mui/material'
+import {
+  Button,
+  Skeleton,
+  Typography,
+  Box,
+  IconButton,
+  TextField,
+  InputAdornment,
+  Toolbar,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  LinearProgress,
+} from '@mui/material'
 import { Stack } from '@mui/system'
 import TaskFormModal from '../components/TaskFormModal'
 import { SearchOutlined } from '@mui/icons-material'
 import WindowIcon from '@mui/icons-material/Window'
 import GridOnIcon from '@mui/icons-material/GridOn'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TasksListing from '../components/TasksListing'
 import FilterMenu from '../components/FilterMenu'
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid'
 
 function LoadingSkeleton() {
-  ;<Stack spacing={1}>
-    <Skeleton variant='text' height={20} />
-    <Skeleton variant='text' height={20} />
-    <Skeleton variant='text' height={20} />
-    <Skeleton variant='rectangular' height={300} />
-  </Stack>
+  return (
+    <Stack spacing={1}>
+      <Skeleton variant='text' height={20} />
+      <Skeleton variant='text' height={20} />
+      <Skeleton variant='text' height={20} />
+      <Skeleton variant='rectangular' height={300} />
+    </Stack>
+  )
 }
 
 function TaskReport({ completedTasks, incompletedTasks }) {
@@ -32,6 +48,13 @@ function TaskReport({ completedTasks, incompletedTasks }) {
           <Typography>Number of task: {tasks.tasks ? tasks.tasks.length : 0}</Typography>
           <Typography>Number of completed: {completedTasks.length}</Typography>
           <Typography>Number of completed: {incompletedTasks.length}</Typography>
+          <LinearProgress
+            color={'success'}
+            variant='determinate'
+            sx={{ height: '16px', borderRadius: '24px', width: '50%' }}
+            value={(completedTasks.length * 100) / tasks.tasks.length} // normalize the value to fit the progress bar
+            valueBuffer={100}
+          />
         </>
       ) : (
         <LoadingSkeleton />
@@ -114,7 +137,7 @@ function Dashboard() {
   ]
 
   return (
-    <Stack>
+    <Stack display={'flex'} flexGrow={1}>
       <h2>Dashboard</h2>
       <h3>Hello {user ? user.name : null}!</h3>
       <Box sx={{ display: 'flex', gap: '2rem', '& > div:last-of-type': { marginLeft: 'auto', marginRight: '2rem' } }}>
@@ -176,36 +199,44 @@ function Dashboard() {
       </Toolbar>
       {viewMode === 'list' ? (
         <Stack p={1}>
-          <Box>
-            <Typography variant='h5'>Complete ({completedTasks ? completedTasks.length : 0})</Typography>
-            {tasks.tasks ? (
-              <TasksListing
-                tasks={completedTasks}
-                selectedTask={selectedTask}
-                setSelectedTask={setSelectedTask}
-                setFormInfo={setFormInfo}
-                handleOpen={handleOpen}
-                setAction={setAction}
-              />
-            ) : (
-              <LoadingSkeleton />
-            )}
-          </Box>
-          <Box>
-            <Typography variant='h5'>Incomplete ({completedTasks ? incompletedTasks.length : 0})</Typography>
-            {tasks.tasks ? (
-              <TasksListing
-                tasks={incompletedTasks}
-                selectedTask={selectedTask}
-                setSelectedTask={setSelectedTask}
-                setFormInfo={setFormInfo}
-                handleOpen={handleOpen}
-                setAction={setAction}
-              />
-            ) : (
-              <LoadingSkeleton />
-            )}
-          </Box>
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='h6'>Complete ({completedTasks ? completedTasks.length : 0})</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {tasks.tasks ? (
+                <TasksListing
+                  tasks={completedTasks}
+                  selectedTask={selectedTask}
+                  setSelectedTask={setSelectedTask}
+                  setFormInfo={setFormInfo}
+                  handleOpen={handleOpen}
+                  setAction={setAction}
+                />
+              ) : (
+                <LoadingSkeleton />
+              )}
+            </AccordionDetails>
+          </Accordion>
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='h6'>Incomplete ({completedTasks ? incompletedTasks.length : 0})</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {tasks.tasks ? (
+                <TasksListing
+                  tasks={incompletedTasks}
+                  selectedTask={selectedTask}
+                  setSelectedTask={setSelectedTask}
+                  setFormInfo={setFormInfo}
+                  handleOpen={handleOpen}
+                  setAction={setAction}
+                />
+              ) : (
+                <LoadingSkeleton />
+              )}
+            </AccordionDetails>
+          </Accordion>
         </Stack>
       ) : null}
       {viewMode === 'table' ? (
@@ -218,7 +249,7 @@ function Dashboard() {
               rowsPerPageOptions={[5]}
               checkboxSelection
               getRowId={(row) => row._id}
-              onSelectionModelChange={()=>(console.log('grid changes'))}
+              onSelectionModelChange={() => console.log('grid changes')}
             />
           ) : (
             <LoadingSkeleton />
